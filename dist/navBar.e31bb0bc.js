@@ -125,33 +125,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getBox = void 0;
 
-//<i class="fas fa-angle-up"></i>
 var getBox = function getBox(items) {
   var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var isOpen = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-  // let open = isOpen ? "__open" : "";
-  // <div class="nav-bar__arro">
-  //   <i class="fas fa-angle-right" data-id="${item.id}" data-type="arrow" ></i>
-  // </div>
+  var isOpen = arguments.length > 2 ? arguments[2] : undefined;
+  var open = isOpen === null || isOpen === true ? "" : "open"; //это костыль ты должен исправить это 
+
   var childItems = items.filter(function (elem) {
     return elem.parentId == id;
   }).map(function (element) {
-    return "\n      <div class=\"nav-bar-wrapper\">\n        <div class=\"nav-bar__child-item\" data-type=\"child-item>\n          <div class=\"nav-bar__icon\" data-type=\"icon\">\n          <span class=\"nav-bar__text\" data-type=\"item-text\">\n            ".concat(element.text, "\n          </span>\n        </div>\n      </div>\n    ");
+    return "\n      <div class=\"nav-bar-wrapper-child-items\">\n        <div class=\"nav-bar__child-item\" data-type=\"child-item>\n          <div class=\"nav-bar__icon\" data-type=\"icon\">\n          <span class=\"nav-bar__text\" data-type=\"item-text\">\n            ".concat(element.text, "\n          </span>\n        </div>\n      </div>\n    ");
   });
-  /*.unshift(`
-    <div class="nav-bar-wrapper">
-      <div class="nav-bar__child-title-item" data-type="child-title-item>
-        <div class="nav-bar__icon" data-type="icon">
-        <span class="nav-bar__text" data-type="item-text">
-          ${titleChildItems.text}
-        </span>
-      </div>
-    </div>
-    `)*/
-  // .map(elem => {
-  //   
-  // }).find(elem => !elem.parentId)
-
   var itemsNavBar = items.filter(function (elem) {
     return !elem.parentId;
   }).map(function (item) {
@@ -162,12 +145,13 @@ var getBox = function getBox(items) {
     var titleChildItems = items.find(function (elem) {
       return elem.id == id;
     });
-    childItems.unshift("\n    <div class=\"nav-bar-wrapper\">\n    <div class=\"nav-bar__child-title-item\" data-type=\"child-title-item\">\n      <div class=\"nav-bar__icon\" data-type=\"icon\">\n        <i class=\"far fa-sort-amount-up-alt\"></i>\n      </div>\n      <span class=\"nav-bar__text\" data-type=\"item-text\">\n        ".concat(titleChildItems.text, "\n      </span>\n  </div>\n    "));
-  } // console.log(itemsNavBar)
-
-
-  itemsNavBar.push("<div class=\"nav-bar-child\" data-type=\"child-items\">\n  ".concat(childItems.join(""), "\n</div>"));
-  return itemsNavBar.join(""); // return navBarItems;
+    childItems.unshift("\n      <div class=\"nav-bar__child-title-item\" data-type=\"child-title-item\">\n        <div class=\"nav-bar__icon\" data-type=\"icon\">\n          <i class=\"far fa-sort-amount-up-alt\"></i>\n        </div>\n        <span class=\"nav-bar__text\" data-type=\"item-text\">\n          ".concat(titleChildItems.text, "\n        </span>\n      </div>\n    "));
+    itemsNavBar.push("<div class=\"nav-bar-child ".concat(open, "\" data-type=\"child-items\">\n      ").concat(childItems.join(""), "\n    </div>"));
+    return itemsNavBar.join("");
+  } else {
+    itemsNavBar.push("<div class=\"nav-bar-child ".concat(open, "\" data-type=\"child-items\">\n      </div>"));
+    return itemsNavBar.join("");
+  }
 };
 
 exports.getBox = getBox;
@@ -204,7 +188,7 @@ var navBar = /*#__PURE__*/function () {
     this.items = items;
     this.$el = document.querySelector(selector);
 
-    _classPrivateMethodGet(this, _render, _render2).call(this);
+    _classPrivateMethodGet(this, _render, _render2).call(this, 0, null);
 
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
   }
@@ -216,33 +200,15 @@ var navBar = /*#__PURE__*/function () {
 
       if (type === "arrow") {
         this.$childItems = document.querySelector('[data-type="child-items"]');
-        console.log("fuck", this.$childItems);
-        this.toglle();
 
-        _classPrivateMethodGet(this, _render, _render2).call(this, event.target.dataset.id);
+        _classPrivateMethodGet(this, _render, _render2).call(this, event.target.dataset.id, this.isOpen); // this.toglle();
+
       }
-    }
-  }, {
-    key: "toglle",
-    value: function toglle() {
-      this.isOpen ? this.close() : this.open();
-    }
-  }, {
-    key: "open",
-    value: function open() {
-      console.log(this.$childItems);
-      this.$childItems.classList.add("open");
-    }
-  }, {
-    key: "close",
-    value: function close() {
-      this.$childItems.classList.remove("open");
     }
   }, {
     key: "isOpen",
     get: function get() {
-      console.log(this.$childItems);
-      return this.$childItems.classList.contains("nav-bar-child__open");
+      return this.$childItems.classList.contains("open");
     }
   }]);
 
@@ -253,7 +219,8 @@ exports.navBar = navBar;
 
 var _render2 = function _render2() {
   var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  this.$el.innerHTML = (0, _getBox.getBox)(this.items, id);
+  var isOpen = arguments.length > 1 ? arguments[1] : undefined;
+  this.$el.innerHTML = (0, _getBox.getBox)(this.items, id, isOpen);
 };
 
 var _setup2 = function _setup2() {
@@ -364,6 +331,14 @@ window.n = new _navBar.navBar("#nav-bar", [{
   id: 7,
   text: "Fuck",
   parentId: 3
+}, {
+  id: 7,
+  text: "Fuck",
+  parentId: 2
+}, {
+  id: 7,
+  text: "Fuck",
+  parentId: 2
 }]); // import name from './navBar/';
 },{"./navBar/navBar.js":"navBar/navBar.js","./navBar/styles.css":"navBar/styles.css"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -393,7 +368,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58752" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53401" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

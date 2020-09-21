@@ -4,12 +4,12 @@ export  class navBar {
   constructor(selector, items) {
     this.items = items;
     this.$el = document.querySelector(selector);
-    this.#render();
+    this.#render(0, null);
     this.#setup();
   }
 
-  #render(id = 0) {
-    this.$el.innerHTML = getBox(this.items, id);
+  #render(id = 0, isOpen) {
+    this.$el.innerHTML = getBox(this.items, id, isOpen);
   };
 
   #setup() {
@@ -17,32 +17,29 @@ export  class navBar {
     this.$el.addEventListener("click", this.clickHandler);
   };
 
+  get isOpen() {
+    return this.$childItems.classList.contains("open");
+  }
+
   clickHandler(event) {
     const { type } = event.target.dataset;
     if (type === "arrow") {
       this.$childItems = document.querySelector('[data-type="child-items"]');
-      console.log("fuck",this.$childItems);
-      this.toglle()
-      this.#render(event.target.dataset.id);
+      this.#render(event.target.dataset.id, this.isOpen);
+      // this.toglle();
     }
   };
+//пока что это закоменчино, но это не правильно
+  // toglle() {
+  //   console.log(this.isOpen)
+  //   this.isOpen ? this.close() : this.open();
+  // }
 
-  get isOpen() {
-    console.log(this.$childItems);
-    return this.$childItems.classList.contains("nav-bar-child__open");
-  }
+  // open() {
+  //   this.$childItems.classList.add("open");
+  // }
 
-  toglle() {
-    this.isOpen ? this.close() : this.open();
-  }
-
-  open() {
-    console.log(this.$childItems)
-    this.$childItems.classList.add("open");
-  }
-
-  close() {
-    this.$childItems.classList.remove("open");
-  }
-
+  // close() {
+  //   this.$childItems.classList.remove("open");
+  // }
 }

@@ -10,6 +10,8 @@ window.n = new navBar("#nav-bar", [
   {id: 5, text: "Текст", parentId: 3},
   {id: 6, text: "Текст текст", parentId: 3},
   {id: 7, text: "Fuck", parentId: 3},
+  {id: 7, text: "Fuck", parentId: 2},
+  {id: 7, text: "Fuck", parentId: 2},
 
 ]);
 // import name from './navBar/';

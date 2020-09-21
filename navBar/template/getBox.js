@@ -1,16 +1,10 @@
-//<i class="fas fa-angle-up"></i>
+export const getBox = (items, id = 0, isOpen) => {
 
-export const getBox = (items, id = 0, isOpen = false) => {
+  let open = isOpen === null || isOpen === true ? "" : "open"; //это костыль ты должен исправить это 
 
-  // let open = isOpen ? "__open" : "";
-  
-
-  // <div class="nav-bar__arro">
-  //   <i class="fas fa-angle-right" data-id="${item.id}" data-type="arrow" ></i>
-  // </div>
   const childItems = items.filter(elem => elem.parentId == id).map(element => {
     return `
-      <div class="nav-bar-wrapper">
+      <div class="nav-bar-wrapper-child-items">
         <div class="nav-bar__child-item" data-type="child-item>
           <div class="nav-bar__icon" data-type="icon">
           <span class="nav-bar__text" data-type="item-text">
@@ -21,21 +15,7 @@ export const getBox = (items, id = 0, isOpen = false) => {
     `;
   })
   
-  
-/*.unshift(`
-  <div class="nav-bar-wrapper">
-    <div class="nav-bar__child-title-item" data-type="child-title-item>
-      <div class="nav-bar__icon" data-type="icon">
-      <span class="nav-bar__text" data-type="item-text">
-        ${titleChildItems.text}
-      </span>
-    </div>
-  </div>
-  `)*/
 
-  // .map(elem => {
-  //   
-  // }).find(elem => !elem.parentId)
   const itemsNavBar = items.filter(elem => !elem.parentId).map(item => {
     return `
       <div class="nav-bar-wrapper">
@@ -58,23 +38,23 @@ export const getBox = (items, id = 0, isOpen = false) => {
     let titleChildItems = items.find(elem => elem.id == id);
 
     childItems.unshift(`
-    <div class="nav-bar-wrapper">
-    <div class="nav-bar__child-title-item" data-type="child-title-item">
-      <div class="nav-bar__icon" data-type="icon">
-        <i class="far fa-sort-amount-up-alt"></i>
+      <div class="nav-bar__child-title-item" data-type="child-title-item">
+        <div class="nav-bar__icon" data-type="icon">
+          <i class="far fa-sort-amount-up-alt"></i>
+        </div>
+        <span class="nav-bar__text" data-type="item-text">
+          ${titleChildItems.text}
+        </span>
       </div>
-      <span class="nav-bar__text" data-type="item-text">
-        ${titleChildItems.text}
-      </span>
-  </div>
     `);
-    
-  }
-  // console.log(itemsNavBar)
-  
-  itemsNavBar.push(`<div class="nav-bar-child" data-type="child-items">
-  ${childItems.join("")}
-</div>`);
+
+  itemsNavBar.push(`<div class="nav-bar-child ${open}" data-type="child-items">
+      ${childItems.join("")}
+    </div>`);
+    return itemsNavBar.join("");
+  } else {
+    itemsNavBar.push(`<div class="nav-bar-child ${open}" data-type="child-items">
+      </div>`);
   return itemsNavBar.join("");
-  // return navBarItems;
+  }
 }
